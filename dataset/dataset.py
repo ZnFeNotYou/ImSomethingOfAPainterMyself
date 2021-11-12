@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 
-ImageDir = '/home/notyou/Kaggle_Challenges/Data_ImSomethingOfAPainterMyself/monet_jpg/'
-
-
+ImageDir = os.path.abspath("../" + os.curdir + "/data/monet_jpg/")
 
 class DataGenerator():
     def __init__(self, imagepath):
@@ -31,25 +29,33 @@ class DataGenerator():
         return len(self.paintings)
     
     def __getitem__(self, idx):
-        x = torch.tensor(self.paintings[idx]) #Shape is 3,256,256
-        #What is the y? Is it 0 or 1 for true/false?
-        y = 1        
-        y = torch.tensor(y)
+        #Shape of outcomes has to be 3, 256, 256
+        #y-values will be added later in training class
+        painting = self.paintings[idx]
+        x = np.zeros((painting.shape[2], painting.shape[0], painting.shape[1]))
         
-        return x.long(), y.float()
+        for i in range(painting.shape[2]):
+            x[i] = painting[:,:,i]
+                       
+        x = torch.from_numpy(x)
+        
+        return x.long()
     
     
     
 dataClass = DataGenerator(ImageDir)
 Length = dataClass.__len__()
 Paint = dataClass.paintings
+x = dataClass.__getitem__(10)
+
     
-test_ds = torch.utils.data.random_split(dataClass, lengths=(Length,0))
-test_dl = DataLoader(test_ds)
+test_ds, _ = torch.utils.data.random_split(dataClass, lengths=(Length,0))
+test_dl = DataLoader(test_ds, batch_size=2)
 
+for x in test_dl:
+    a = 1
+    
 plt.imshow(Paint[0])
-
-
 
     
     
