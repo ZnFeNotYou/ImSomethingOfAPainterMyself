@@ -14,17 +14,17 @@ class TrainGAN():
         self.Paintingpath = Paths['Paintingpath']
         self.Modelpath = Paths['Modelpath']
         self.Filename = Paths['Filename']
-        
+
+        self.CUDA = bool(CUDA)
+
         #Networks
-        self.Generator = Generator
-        self.Discriminator = Discriminator
+        self.Generator = self.loadModel(Generator)
+        self.Discriminator = self.loadModel(Discriminator)
         self.lossFn = lossFn 
         
         self.Epoch = Epoch_BatchSize[0]
         self.PreTrain = Epoch_BatchSize[1]
         self.BatchSize = int(Epoch_BatchSize[2])
-        
-        self.CUDA= bool(CUDA)
 
 
     def loadModel(self, model):
@@ -32,7 +32,7 @@ class TrainGAN():
             return model.cuda()
         else:
             return model
-        
+
     
     def time(self, total_time):
         hours = int(total_time/3600)
@@ -152,7 +152,7 @@ class TrainGAN():
             epoch_time = time.time() - epoch_start_time
             hours, mins, sec = self.time(epoch_time) #### Copy self.time() function
             
-            errorGen, errorRealDisc, errorFakeDisc = Gen.detach().cpu().numpy(), errorRealDisc.detach().cpu().numpy(), errorFakeDisc.detach().cpu().numpy()
+            errorGen, errorRealDisc, errorFakeDisc = errorGen.detach().cpu().numpy(), errorRealDisc.detach().cpu().numpy(), errorFakeDisc.detach().cpu().numpy()
             print('Generator Loss: %.f'%errorGen)
             print('Discriminator Loss Fake Data: %.f'%errorFakeDisc)
             print('Discriminator Loss Real Data: %.f'%errorRealDisc)
@@ -173,7 +173,7 @@ class TrainGAN():
             Lossfunction = ['Loss Function: ', self.lossFn]
             ColumnOrder = ['Gen', 'DiscReal', 'DiscFake']
                     
-            with open(self.modelpath+'Loss_'+self.filename+'.csv', 'w') as f:
+            with open(self.Modelpath+'Loss_'+self.Filename+'.csv', 'w') as f:
                 writer = csv.writer(f)
                     
                 writer.writerow(Header)
