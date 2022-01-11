@@ -28,6 +28,7 @@ Discriminator = Networks.Candice(3, 1) ###
 loss_fn = nn.BCEWithLogitsLoss() ###     #If Not CEL => Softmax = True
 optimizerG = torch.optim.Adam(Generator.parameters(), lr=2e-4, weight_decay=3e-05, betas=(0.5,0.999)) ###
 optimizerD = torch.optim.Adam(Discriminator.parameters(), lr=2e-4, weight_decay=3e-05, betas=(0.5, 0.999)) ###
+#Do we want a degrading learning rate?
 
 trainClass = Training.TrainGAN(trainPaths, Generator, Discriminator, loss_fn, Epoch_BatchSize)       
 trainClass.trainModel(optimizerD, optimizerG)                          

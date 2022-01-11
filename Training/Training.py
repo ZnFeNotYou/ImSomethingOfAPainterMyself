@@ -47,7 +47,7 @@ class TrainGAN():
         
         #Train on real data
         predictionReal = self.Discriminator(realData)
-        errorReal = self.lossFn(predictionReal, torch.ones_like(predictionReal))
+        errorReal = self.lossFn(predictionReal, torch.ones_like(predictionReal).float())
         errorReal.backward()   
         optimizer.step()
         
@@ -59,7 +59,7 @@ class TrainGAN():
 
         #Train on fake data
         predictionFake = self.Discriminator(fakeData)
-        errorFake = self.lossFn(predictionFake, torch.zeros_like(predictionFake))
+        errorFake = self.lossFn(predictionFake, torch.zeros_like(predictionFake).float())
         errorFake.backward()
         optimizer.step()
         
@@ -71,7 +71,7 @@ class TrainGAN():
         
         #Generate fake data and train
         prediction =  self.Discriminator(fakeData)
-        error = self.lossFn(prediction, torch.ones_like(prediction))
+        error = self.lossFn(prediction, torch.ones_like(prediction).float())
         error.backward()
         optimizer.step()
         

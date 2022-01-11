@@ -42,7 +42,7 @@ class DataGenerator():
                        
         x = torch.from_numpy(x)
         
-        return x.long()
+        return x.float()
     
     
     
